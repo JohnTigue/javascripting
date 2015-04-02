@@ -17,8 +17,7 @@
     "io",
     "mocha",
     "chai",
-    "sinon",
-    "etc"
+    "sinon"
   ],
   "author": "John Tigue",
   "license": "MIT",

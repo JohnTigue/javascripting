@@ -1,0 +1,2 @@
+## nodeio
+nodeio is just a sandbox wherein I collect experiments and explorations of node.js an io.js and related tools. Mostly tire kicking and sanity checking stuff. Nothing of interest in terms of novelty.
