@@ -4,7 +4,9 @@
   "description": "Sandbox for raising sand in node and io, just explortions and experiments",
   "main": "index.js",
   "scripts": {
-    "test": "mocha -watch --recursive src"
+    "test": "mocha --watch --recursive src",
+    "env": "env",
+    "lint": "find src -name *.js -exec jshint {} \\;",
   },
   "repository": {
     "type": "git",
@@ -25,8 +27,9 @@
   },
   "homepage": "https://github.com/JohnTigue/nodeio",
   "devDependencies": {
-    "chai": "^2.2.0",
-    "mocha": "^2.2.1",
-    "sinon": "^1.14.1"
+    "chai": "*",
+    "jshint": "*",
+    "mocha": "*",
+    "sinon": "*"
   }
 }
