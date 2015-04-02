@@ -1,0 +1,32 @@
+{
+  "name": "nodeio",
+  "version": "0.0.0",
+  "description": "Sandbox for raising sand in node and io, just explortions and experiments",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha -watch --recursive src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JohnTigue/nodeio.git"
+  },
+  "keywords": [
+    "node",
+    "io",
+    "mocha",
+    "chai",
+    "sinon",
+    "etc"
+  ],
+  "author": "John Tigue",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JohnTigue/nodeio/issues"
+  },
+  "homepage": "https://github.com/JohnTigue/nodeio",
+  "devDependencies": {
+    "chai": "^2.2.0",
+    "mocha": "^2.2.1",
+    "sinon": "^1.14.1"
+  }
+}
