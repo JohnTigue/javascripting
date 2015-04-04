@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha --watch --recursive src",
     "env": "env",
-    "lint": "find src -name *.js -exec jshint {} \\;",
+    "lint": "find src -name *.js -exec jshint {} \\;"
   },
   "repository": {
     "type": "git",
@@ -30,5 +30,8 @@
     "jshint": "*",
     "mocha": "*",
     "sinon": "*"
+  },
+  "dependencies": {
+    "promise": "^6.1.0"
   }
 }
