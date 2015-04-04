@@ -9,7 +9,7 @@
   *   'use strict';
   *   "use strict";
   * In all of the following steps only the former case is being commented out and re-enabled.
-  * I.e. the test is only modifies the first statement in the code, not the Use Strict Directive inside an it() further down in the file.
+  * I.e. the test only modifies the first statement in the code, not the Use Strict Directive inside an it() further down in the file.
   *
   * Here's the unexpected bahavior:
   * 1. Have this file with the Use Strict Directive enabled (i.e. the way it was found in the code repository).
@@ -39,7 +39,7 @@
   * 3. Uncomment out 'use strict'; and save
   * 4. mocha will re execute the 2 tests
   *    1) passes and 2) fails
-  *    That is _NOT_EXPECTED_. I thought we were into strict mode.
+  *    That is _NOT_EXPECTED_. Expected the program to execute in strict mode.
   */
 'use strict';
 

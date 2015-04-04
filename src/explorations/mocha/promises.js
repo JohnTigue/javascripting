@@ -23,9 +23,9 @@ describe('builtin-promises-test.js:', function(){
   //   Use the function form of "use strict"
   'use strict'; 
 
-  var assert = require('assert');
-  var http   = require('http');
-  var fs     = require('fs');
+  var assert  = require('assert');
+  var http    = require('http');
+  var fs      = require('fs');
 
   // Following Lindesay's style here. I guess the Capital is to imply class-ness? Dunno.
   var Promise = require('promise');
@@ -48,15 +48,15 @@ describe('builtin-promises-test.js:', function(){
     var bPromise = null;
     before(function(){
       bPromise = new Promise(function(resolve, reject){
-        resolve("insta-resolve");
+        resolve('Carpet cleaner extraordinaire');
         });
       });
 
     // Notice how there is no need for a done callback in params of the function passed in.
     // With a simple async callback, that would need to be function(done){}
     it('should find the supplied resolved value in then()', function(){
-      return bPromise.then( function( resolution ) {
-        assert.equal(resolution, 'insta-resolve', 'bPromise insta-resolved');
+      return bPromise.then(function(aValue){
+        assert.equal(aValue, 'Carpet cleaner extraordinaire', 'bPromise insta-resolved');
         });
       });
     });
@@ -66,7 +66,7 @@ describe('builtin-promises-test.js:', function(){
     var aPromise = null;
     before(function(){
       aPromise = new Promise(function(resolve, reject){
-        reject( "insta-resolve" );
+        reject('Reason? Just because.');
         });
       });
 
@@ -77,8 +77,8 @@ describe('builtin-promises-test.js:', function(){
     //   3. Return the Promise
     //   4. I guess mocha will then() on it and repsond appropriately
     it('should throw', function(){
-      return aPromise.then(function(resolution){
-        assert.fail("", "", "aPromise should have rejected", "");
+      return aPromise.then(function(aValue){
+        assert.fail('', '', 'aPromise should have rejected', '');
         });
       });
     });
