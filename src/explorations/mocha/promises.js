@@ -48,15 +48,17 @@ describe('builtin-promises-test.js:', function(){
     var bPromise = null;
     before(function(){
       bPromise = new Promise(function(resolve, reject){
-        resolve('Carpet cleaner extraordinaire');
+        resolve('basically, unit');
         });
       });
 
-    // Notice how there is no need for a done callback in params of the function passed in.
-    // With a simple async callback, that would need to be function(done){}
+    // Notice how there is no need for a done callback in the params of the function passed in.
+    // With a simple (i.e. non-Promise) async callback, that function def would need to function(done){}
+    // but because it() returns the Promise synchronously, no done() is needed to handle asynch-ery,
+    // yet then() will happen asynchronously. Mocha is tight like that.
     it('should find the supplied resolved value in then()', function(){
       return bPromise.then(function(aValue){
-        assert.equal(aValue, 'Carpet cleaner extraordinaire', 'bPromise insta-resolved');
+        assert.equal(aValue, 'basically, unit', 'bPromise insta-resolved like unit');
         });
       });
     });
