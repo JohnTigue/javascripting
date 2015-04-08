@@ -84,5 +84,40 @@ describe('builtin-promises-test.js:', function(){
         });
       });
     });
+
+  /** This confirms that if before() returns a promise which rejects, then 
+    * it() will never be called, which is good.
+    */
+  context('when auto-rejecting a Promise and returning it from before() should throw ahead of it()', function(){
+    var aPromise = null;
+    before(function(){
+      return aPromise = new Promise(function(resolve, reject){
+        reject('Reason? Just because I\'m in a bad mood.');
+        });
+      });
+
+    it('should throw', function(){
+      return aPromise.then(function(aValue){
+        assert.fail('', '', 'aPromise should have rejected in before and this it() should never have been called', '');
+        });
+      });
+    });
+
+
+  /** Just checking that indeed an _async_ reject in before() will prevent it() from being called */
+  context('when setTime() rejects a Promise that was returned from before() should throw ahead of it()', function(){
+    var aPromise = null;
+    before(function(){
+      return aPromise = new Promise(function(resolve, reject){
+        setTimeout(function(){reject('Intentionally timed out and rejected');}, 500);
+        });
+      });
+
+    it('should throw', function(){
+      return aPromise.then(function(aValue){
+        assert.fail('', '', 'aPromise should have rejected in before and this it() should never have been called', '');
+        });
+      });
+    });
   });
 
