@@ -22,7 +22,7 @@
   * Install it:
   *   npm install promise --save
   */
-describe('builtin-promises-test.js:', function(){
+describe('promises.js:', function(){
   // Moved all the code into one big file-wide describe to keep JSHint from saying: 
   //   Use the function form of "use strict"
   'use strict'; 
@@ -33,7 +33,6 @@ describe('builtin-promises-test.js:', function(){
 
   // Following Lindesay's style here. I guess the Capital is to imply class-ness? Dunno.
   var Promise = require('promise');
-
 
   context('when simply instantiating a Promise', function(){
     var aPromise = null;
@@ -52,7 +51,6 @@ describe('builtin-promises-test.js:', function(){
         if(!threwAsExpected)
           throw new Error("bad Promise instantiation did not throw as expects");
         }
-
       aPromise = new Promise(function(){});
       });
 
@@ -72,8 +70,15 @@ describe('builtin-promises-test.js:', function(){
      * With a simple (i.e. non-Promise) async callback, that function def would need to function(done){}
      * but because it() returns the Promise synchronously, no done() is needed to handle asynch-ery,
      * yet then() will happen asynchronously. Mocha (as of 1.18, I hear) is tight like that.
+     *
+     * Here's the most elegant solution from 2014-11 (which must be >= mocha 1.18, I guess):
+     *   http://stackoverflow.com/a/26572442
+     *   1. No done passed into it()'s callback
+     *   2. No rejection handler (could suppress errors)
+     *   3. Return the Promise
+     *   4. I guess mocha will then() and catch() on it and repsond appropriately
      */
-    it('should find the supplied resolved value in then()', function(){
+    it('should find in then(), the value supplied earlier during resolve()', function(){
       return bPromise.then(function(aValue){
         assert.equal(aValue, 'basically, unit', 'bPromise insta-resolved like unit');
         });
@@ -109,81 +114,32 @@ describe('builtin-promises-test.js:', function(){
     });
 
 
-  /** More playing with catch but with a rejected Promise.
-    * 
-    * If a testing Promise has a catch(), does that eat the reject
-    * message that should go to mocha? What if rejectHandler throws:
-    * sure but not elegant.  I would think that it shouldn't eat the
-    * reject message, but I thought I saw that yet that was very early
-    * in learning mocha-meets-promises.
-    */
-  context('when insta-rejecting a Promise and returning it from before() ', function(){
-    var aPromise = null;
-    before(function(){
-      aPromise = Promise.reject('I\'m in a bad mood so OK');
-      return aPromise;
-      });
-
-    it('should still pass even if there is a catch()', function(){
-      return aPromise
-        .then(function(aValue){
-          assert.fail('', '', 'aPromise should have rejected in before and this it() should never have been called', '');
-          })
-        .catch(function(aBadThing){
-	  console.log('=======================================catch()') ;
-          });
-      });
-    });
+  /* -------------- Now let's play with rejected Promises ------------ */
 
 
   /** Odd test here. Actually testing mocha, not a SUT so need this to
     * fail for meta-test to be successful.
-    */
-  context('when auto-rejecting a Promise in before()', function(){
-    var aPromise = null;
-    before(function(){
-      aPromise = new Promise(function(resolve, reject){
-        reject('Reason? Just because.');
-        });
-      return aPromise;
-      });
-
-    // Here's the most elegant solution from 2014-11:
-    //   http://stackoverflow.com/a/26572442
-    //   1. No done passed into it()'s callback
-    //   2. No rejection handler (could suppress errors)
-    //   3. Return the Promise
-    //   4. I guess mocha will then() on it and repsond appropriately
-    it('should throw', function(){
-      return aPromise.then(function(aValue){
-        assert.fail('', '', 'aPromise should have rejected on return from before() so this should never have been reached.', '');
-        });
-      });
-    });
-
-
-  /** This confirms that if before() returns a promise which rejects, then 
+    *
+    * This confirms that if before() returns a promise which rejects, then 
     * it() will never be called, which is good.
     */
-  context('when insta-rejecting a Promise and returning it from before() should throw ahead of it()', function(){
+  context('when insta-rejecting a Promise in before() the "before all" hook should error. Right here:', function(){
     var aPromise = null;
     before(function(){
-      aPromise = new Promise(function(resolve, reject){
-        reject('Reason? Just because I\'m in a bad mood.');
-        });
+      aPromise = new Promise.reject('_this_is_the_reject_reason_string_');
       return aPromise;
       });
 
-    it('should throw', function(){
+    it('should throw bofore it() is called', function(){
       return aPromise.then(function(aValue){
-        assert.fail('', '', 'aPromise should have rejected in before and this it() should never have been called', '');
+        assert.fail('', '', 'aPromise should have rejected and mocha should have detected that such that this it() should never have been reached.', '');
         });
       });
     });
 
 
   /** Just checking that indeed an _async_ reject in before() will prevent it() from being called */
-  context('when setTime() rejects a Promise that was returned from before() should throw ahead of it()', function(){
+  context('when setTime() rejects a Promise that was returned from before(), it() should never get called', function(){
     var aPromise = null;
     before(function(){
       aPromise = new Promise(function(resolve, reject){
@@ -192,10 +148,67 @@ describe('builtin-promises-test.js:', function(){
       return aPromise;
       });
 
-    it('should throw', function(){
+    it('should throw before it() gets called', function(){
       return aPromise.then(function(aValue){
         assert.fail('', '', 'aPromise should have rejected in before and this it() should never have been called', '');
         });
+      });
+    });
+
+
+  /* If a Promise has a catch() and it rejects then that cathc() is
+   * supposed to be given a chance to eat the reject message that
+   * would otherwise go to mocha. That catch()/rejectHandler can
+   * itself throw; that is one way how to say "derp, I can't handle
+   * this".
+   */
+  context('when insta-rejecting a Promise in it()', function(){
+    var aPromise = null;
+    before(function(){
+      /* Normally I like to do set-up of state in before(), not it().
+       * But this is a this test of mocha, rather than a SUT, so
+       * cannot do the normal structure because want to test a
+       * rejected Promise. As was just shown in previous test, a
+       * Promise rejected in before() will prevent it() from ever
+       * getting called. So, will reject in it() in this situation.
+       */
+      });
+
+    it('should fail if there is no catch()', function(){
+      aPromise = Promise.reject('Not feeling it');
+      return aPromise
+        .then(function(aValue){
+          assert.fail('', '', 'aPromise should have rejected, so this then() should never have been called', '');
+          });
+      });
+
+    /* This case is interesting: a catch() will prevent mocha from
+     * calling this a failed test, as per the design of Promises. For
+     * testing purposes I guess that makes sense and is how Promises
+     * are supposed to work. I.e. mocha is probably doing a catch()
+     * on the returned Promise. If this catch takes care of the
+     * problem then mocha's catch() should not be called.
+     */
+    it('should pass as this catch() "handles" the rejection', function(){
+      aPromise = Promise.reject('I\'m in a bad mood so NO');
+      return aPromise
+        .then(function(aValue){
+          assert.fail('', '', 'aPromise should have rejected in before and this it() should never have been called', '');
+          })
+        .catch(function(aBadThing){
+	  // silently "handle" the rejection
+          });
+      });
+
+    it('should fail since this catch() throws intentionally', function(){
+      aPromise = Promise.reject('I\'m in a bad mood so NO');
+      return aPromise
+        .then(function(aValue){
+          assert.fail('', '', 'aPromise should have rejected; this it() should never have been called', '');
+          })
+        .catch(function(aBadThing){
+	  throw new Error(aBadThing);
+          });
       });
     });
   });
