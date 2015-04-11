@@ -10,17 +10,17 @@
   *
   * And node's build-in assert does just fine for these basic tests.
   *
-  * After a bit of research, decided to go with Forbes Lindesay's Promise library:
+  * For Promise library, initially used Forbes Lindesay's Promise library:
   *   https://www.npmjs.com/package/promise
-  *
-  * One can read up on that at https://www.promisejs.org/
-  *
-  * He also did talks on it:
-  *   Forbes Lindesay: Promises and Generators: control flow utopia -- JSConf EU 2013:
-  *     https://www.youtube.com/watch?v=qbKWsbJ76-s
-  *
-  * Install it:
+  *   https://www.promisejs.org/
   *   npm install promise --save
+  * It worked quite well, but after kicking it around for a while, decided
+  * to migrate to Bluebird for it stronger community, the social proof, and performance:
+  *   http://jsperf.com/pimp-vs-bluebird-vs-q-vs-rsvp
+  * Migration was extremely painless.
+  *   1. npm install bluebird
+  *   2. changed the require()
+  *   3. change error message detected when new Promise() w/ arita=0
   */
 describe('promises.js:', function(){
   // Moved all the code into one big file-wide describe to keep JSHint from saying: 
@@ -31,8 +31,8 @@ describe('promises.js:', function(){
   var http    = require('http');
   var fs      = require('fs');
 
-  // Following Lindesay's style here. I guess the Capital is to imply class-ness? Dunno.
-  var Promise = require('promise');
+  // Both Lindesay and Bluebird use this Capitalized naming style. I guess it's to imply class-ness? Dunno.
+  var Promise = require('bluebird');
 
   context('when simply instantiating a Promise', function(){
     var aPromise = null;
@@ -42,9 +42,10 @@ describe('promises.js:', function(){
         // If no function as first param throws: TypeError: not a function
         //   var aPromise = new Promise();	
         aPromise = new Promise();
+
         }
       catch(e){
-        if( e.name === 'TypeError' && e.message === 'not a function')
+        if( e.name === 'TypeError' && e.message.substring(0, 52) === 'the promise constructor requires a resolver function')
 	  threwAsExpected = true;
         }
       finally{
