@@ -29,15 +29,16 @@
   *   3. change error message detected when new Promise() w/ arita=0
   */
 describe('promise.js', function(){
-  // Moved all the code into one big file-wide describe to keep JSHint from saying: 
-  //   Use the function form of "use strict"
   'use strict'; 
 
   var assert  = require('assert');
   var http    = require('http');
   var fs      = require('fs');
 
-  // Both Lindesay and Bluebird use this Capitalized naming style. I guess it's to imply class-ness? Dunno.
+  /** Both Lindesay and Bluebird use this Capitalized naming style to
+    * imply that their libraries return a function intended to be
+    * used as a constructor i.e. new Promise().
+    */
   var Promise = require('bluebird');
 
   context('when simply instantiating a Promise', function(){
