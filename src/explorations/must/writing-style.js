@@ -1,15 +1,31 @@
 /* global describe, console, require, before, beforeEach, after, afterEach, it */
+/* The above line is for letting JSHint know that mocha's function are OK to not complain about */
 
-/** The explorations of mocha's fundimentals series continues...
+/** This file is intended to be run by mocha. This file does
+  * not actually test anything, rather it documents my writing style
+  * in mocha test files.
   * 
-  * This file is the first wherein Must.js is being explored:
+  * Mocha needs an assert library. Chai is very popular but I view 
+  * it as a mistake. I got that insight from:
+  *   https://github.com/moll/js-must#asserting-on-property-access
+  * For an explicit test of that issue in this repo, see 
+  *   ../chai/dangerous-assert-on-property-access.js
+  *
+  * Instead I use Must.js as the assertion library:
   *   npm install must --save-dev
   *   https://github.com/moll/js-must
-  *
-  * Main question:
-  * 1. How is Must.js better than node's built in assert?
   */
-describe('playground.js', function(){
+describe('writing-style.js:', function(){
+  /** All code in my to-be-run-by-mocha files is contained within
+    * a single describe(). The benefits of which include:
+    * 1. JSHint will not say: Use the function form of "use strict"
+    * 2. The functional form of the Use Strict Directive can be used
+    *    and os external unrestricted code will not be forced into strict
+    *    mode.
+    * 3. I put the filename in the desciption so when multiple test
+    *    files are run in a batch, the test report will contain the
+    *    file name wherein test failures occurred.
+    */
   'use strict'; 
 
   // Following invocation brings Must.js in as a single prop on Object.prototype.must?
