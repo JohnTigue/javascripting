@@ -1,5 +1,8 @@
 /* JFT-TODO: probably want to call this fpification-via-bind-adaptors.js or such */
 
+'use strict';
+
+console.log('--------------');
 /* For the motivation behind this funky metaprogramming, check out 
  *  Braithwaite's (@raganwald) article on adaptors, The Symmetry of 
  *  JavaScript Functions:
@@ -13,12 +16,25 @@
 
 // The inelegant syntax:
 var slice = Array.prototype.slice;
-// ...
-slice.call(arguments);
+slice.call(arguments); // turns arguments into an array
 
-// That nasty looking ".call" can be gotten rid of as follows, in the elegant case:
+// The above nasty looking ".call" can be gotten rid of as follows, in the elegant rewrite
 // same as "slice" in the previous example
 var unboundSlice = Array.prototype.slice;
+try{
+// Following link says next line of code should throw yet...
+// https://variadic.me/posts/2013-10-22-bind-call-and-apply-in-javascript.html
+console.log('About to throw, right?')
+var wat = unboundSlice(0,4); 
+//should have => TypeError: can't convert undefined to object. JFT-TODO: yet, node has no problem with this
+//console.log('wat:'+wat);
+console.log('Why didn\'t that throw???'); 
+}
+catch(e){
+console.log('Yup, it threw');
+}
+
+// This is how to use bind to make it a function, not a method, yet will still have something to call 'this'
 var slice = Function.prototype.call.bind(unboundSlice);
 // ...
 slice(arguments);
@@ -33,6 +49,11 @@ slice(arguments);
  * And in that space combinators could be used to create y(z,x) or many
  * other possibilities.
  */
+function functionize(aMethod){
+  return Function.prototype.call.bind(aMethod);
+  }
+var slice = functionize(Array.prototype.slice);
+
 
 /* The bestest example of the same trick that will warm the hearts of
  * the FP folks (because bind() if fundimental to FP) is almost

@@ -2,8 +2,9 @@
 
 /** This file kicks the tires of SuperAgent and Nock:
   * http://visionmedia.github.io/superagent
+  * https://github.com/pgte/nock
   *
-  * The goala here are to:
+  * The goals here are to:
   * - exercise SuperAgent's basic functionality
   *   - GET
   *   - JSON handling
@@ -140,7 +141,6 @@ describe('sueragent-tirekicker.js', function(){
         .replyContentLength()
         .get('/foo')
         .reply(200, {foo:"bar"}, {"Content-Type": "application/json"});
-
 	// The follow works as well:
         //.reply(200, '{"foo":"bar"}', {"Content-Type": "application/json"});
       });
