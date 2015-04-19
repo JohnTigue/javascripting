@@ -124,21 +124,22 @@ describe('compositions.js:', function(){
    *   foo(inputParam, function callback(err, value)) 
    *
    * The reason this is interesting is that the standard node style
-   * type signature ("nodeback") is nasty and one can find oneself
-   * interacting with those turds frequently. Some of the Promises
+   * type signature ("nodeback") is nasty and sadly one can find oneself
+   * frequently interacting with those turds. Some of the Promises
    * libraries have utilities for just such a situation i.e. "take a
-   * node system library an wrap it in a Promise." In Q it is called
+   * nodebacker and wrap it in a Promise." In Q it is called
    * Q.denodeify() and in Bluebird it is called
-   * Promise.promisify(). Here the code uses Bluebird.
+   * Promise.promisify(). Here the Promises library uses Bluebird.
    *
    * Bluebird's wiki even encourages the use of promisify for reasons
    * of efficiency and error handling:
    * https://github.com/petkaantonov/bluebird/wiki/Promise-anti-patterns#the-deferred-anti-pattern
    *
    * Note that if promisify (or an equivalent denodeifier) is used
-   * then seriallyExecute() is just a one-liner. Promises!
+   * then seriallyExecute() is just an admittedly long
+   * one-liner. Promises!
    */
-  context.only('When there is a list of nodeback async tasks to perform sequentially', function(){
+  context('When there is a list of nodeback async tasks to perform sequentially', function(){
     var whatWereTheResults = null;
 
     /* For the purposes of testing, need to come up with some
@@ -146,10 +147,10 @@ describe('compositions.js:', function(){
      * case, just take in a number and after a random few milliseconds
      * return the number squared.
      *
-     * Normally, such a thing wouldn't know about promisify, but for
-     * self-pedagogical purposes the callback is labeled
-     * aPromisifyGeneratedCallback to indicate where the in the world
-     * that thing came from.
+     * Normally, a nodebacker wouldn't know about promisify but, for
+     * self-pedagogical purposes, here the callback is labeled
+     * aPromisifyGeneratedCallback in order to indicate where the in
+     * the world that thing came from.
      */
     function aNodebacker(someNumericInputParam, aPromisifyGeneratedCallback){
       logger.debug('aNodesqueFunction('+someNumericInputParam+') kicked off');
@@ -162,23 +163,17 @@ describe('compositions.js:', function(){
       setTimeout(onCompleted, someMillis);
       }
 
+    /* This is where the novelty of this test context is introduced:
+     * the nodebacker is denodified i.e. promisified.
+     */
     var aPromisifiedNodebacker = Promise.promisify(aNodebacker);
 
     function seriallyExecute(someTasks){
       return someTasks.reduce(function(chainedPromises, nowDoThis){
         return chainedPromises.then(function(aResultsAccumulator){
-console.log('in cP.then()');
-
-          return aPromisifiedNodebacker(nowDoThis).then(function(aResult){
-console.log('aPN('+nowDoThis+') --> '+aResult);
+          return nowDoThis().then(function(aResult){
             aResultsAccumulator.push(aResult);
             return(aResultsAccumulator);
-/*
-
-
-          return nowDoThis().then(function(aResult){
-            return aResultsAccumulator.push(aResult);
-*/
             });
           });
         },
@@ -187,16 +182,20 @@ console.log('aPN('+nowDoThis+') --> '+aResult);
       } 
 
     before(function(){ 
-      var someNodeStyleAsyncTasksPromisified = [1, 2, 3, 4];
-        //.map(function(i){
-        //return aNodesqueFunctionPromisified;
-        //JFT-TODO: console.log() these and they are different: return aNodesqueFunctionPromisified.bind(null, i);
-	//});
-
-//console.log(someNodeStyleAsyncTasksPromisified.length);
-someNodeStyleAsyncTasksPromisified.forEach(function(each){console.log(each);});
-
-      whatWereTheResults = seriallyExecute(someNodeStyleAsyncTasksPromisified);
+      /* One of the goals of this exploratory experiment is to come
+       * up with a generic seriallyExecute(). Generic in that it only 
+       * knows it has tasks to run, but it doesn't know about parameters
+       * to pass into the tasks. The following bind() accomplishes that
+       * yet seriallyExecute() still accumulates the results but that
+       * _is_ a reduce() things so maybe that's good enough. (I still
+       * feel there's a higher level abstraction/construct that needs
+       * to be worked out but for now, as is, I have a Promises based
+       * async task executor.
+       */
+      var somePromisifiedNodebackers = [1, 2, 3, 4].map(function(i){
+        return aPromisifiedNodebacker.bind(null, i);
+	});
+      whatWereTheResults = seriallyExecute(somePromisifiedNodebackers);
       return whatWereTheResults;
       });
 
@@ -207,6 +206,4 @@ someNodeStyleAsyncTasksPromisified.forEach(function(each){console.log(each);});
         });
       });
     });
-
-  
   });
