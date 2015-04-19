@@ -41,6 +41,7 @@ describe('promise.js', function(){
     */
   var Promise = require('bluebird');
 
+
   context('when simply instantiating a Promise', function(){
     var aPromise = null;
     before(function(){
@@ -62,8 +63,17 @@ describe('promise.js', function(){
       aPromise = new Promise(function(){});
       });
 
-    it('should be able to instantiate a Promise, if pass in a function', function(){
+    it('should be able to instantiate a Promise, if any function is passed in to constructor', function(){
       assert(aPromise, 'aPromise is truthy');
+      });
+
+    it('should execute function passed immediately, rather than later at .then()', function(){
+      var wireTripped = false;
+
+      var aPromise = new Promise(function(resolvify, rejectify){
+        wireTripped = true;
+        });
+      assert(wireTripped);
       });
     });
 
@@ -124,7 +134,6 @@ describe('promise.js', function(){
 
   /* -------------- Now let's play with rejected Promises ------------ */
 
-
   /** Odd test here. Actually testing mocha, not a SUT so need this to
     * fail for meta-test to be successful.
     *
@@ -133,7 +142,10 @@ describe('promise.js', function(){
     */
   context('when insta-rejecting a Promise in before() the "before all" hook should error. Right here:', function(){
     var aPromise = null;
+
+
     before(function(){
+      console.log('Intentionally, 4) errors should happen next:');
       aPromise = new Promise.reject('_this_is_the_reject_reason_string_');
       return aPromise;
       });
