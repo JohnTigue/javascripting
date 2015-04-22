@@ -58,6 +58,8 @@ translate: [
 183749.53649789095
 ]
 ```
+On the other hand, if this file is uploaded to http://www.mapshaper.org/ then it renders well. Note though that there is no "context" for the rendering i.e no global map and the Seattle City Districts are scaled to take up the full window's allocated pixels. Perhaps mapshaper is not using the bbox and such, which enables it to render?
+
 I explored `topojson`'s command line switches but was not getting anywhere, so I switch to Plan N+1 which eventually got me better results.
 
 #### The good output file
