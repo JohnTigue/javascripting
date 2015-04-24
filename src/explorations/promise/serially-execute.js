@@ -55,29 +55,6 @@ describe('compositions.js:', function(){
    */
   var aPromisifiedSquaringNodebacker = Promise.promisify(aSquaringNodebacker);
 
-  /* Basic sanity check:
-   */
-  context('when insta-resolving a Promise in before()', function(){
-    var aPromise = null;
-
-    /* These tests are stuctured in a style wherein before() drives the
-     * SUT to the state at which to be tested. In this style it() just
-     * does asserts, it() does not change the state of SUT. Mocha will
-     * wait for the Promise returned by before to resolve before calling
-     * it.
-     */
-    before(function(){
-      aPromise = Promise.resolve('basically, unit');
-      });
-
-    it('must in then(), find the value supplied earlier during resolve()', function(){
-      return aPromise.then(function(aValue){
-        must(aValue).equal('basically, unit');
-        });
-      });
-    });
-
-
   // The SUT:
   // JFT-TODO: This could be moved out to a module. A promises-utils.js?
   // And eventually to another repo?
@@ -85,11 +62,23 @@ describe('compositions.js:', function(){
   /* This is the core of this experiment: using Array.prototype.reduce 
    * to serially execute an array of tasks.
    * 
-   * Notice how this is called with simple single Promise and, separately
-   * later in different tests, with compound Promises i.e. this is reusable.
+   * Notice how this will called with simple single Promises and,
+   * separately later in different tests, with compound Promises
+   * i.e. this is reusable.
    *
-   * JFT-TODO: this just feels awkward, like there's a superfluous bit of
-   * Promise-ery being used.
+   * JFT-TODO: this just feels awkward, like there's a superfluous bit
+   * of Promise-ery being used.
+   *
+   * I still feel there's a higher level abstraction/construct
+   * that I'm missing -- something that knows how to set the
+   * accumulator object; as is, the accumulator is hardwired to []. 
+   * But for now, as is, I have a Promises based async task
+   * executor: in goes an Array of tasks and out comes an Array
+   * of values, kinda a seriallyMap() or mapSequentiallyAsync().
+   *
+   * I would not be surprised it there is not already a standarly
+   * named object that does this that I'm just not aware
+   * of. ToDoList()? TaskQueue()?
    */
   function seriallyExecute(someTasks){
     return someTasks.reduce(function(chainedPromises, nowDoThis){
@@ -106,7 +95,8 @@ describe('compositions.js:', function(){
 
 
   /* A simple Promises-based construct for how to serially execute a
-   * series of async tasks, using "old-school" nodebacks.
+   * series of async tasks, using "old-school" nodebacks (but not using
+   * Promise.promisify or other denodifying utilities).
    *
    * Check out this conversation:
    * http://derickbailey.com/2015/03/12/serially-iterating-an-array-asynchronously/
@@ -166,8 +156,8 @@ describe('compositions.js:', function(){
       return whatWereTheResults;
       });
 
+    // By the time it() is called, the Promise returned by before() has resolves:
     it('must execute them one at a time', function(){
-      // By the time it() is called, the Promise returned by before() has resolves
       whatWereTheResults.then(function(theResults){
         must(theResults).eql(['a', 'b', 'c', 'd']);
         });
@@ -194,31 +184,21 @@ describe('compositions.js:', function(){
    * https://github.com/petkaantonov/bluebird/wiki/Promise-anti-patterns#the-deferred-anti-pattern
    *
    * Note that if promisify (or an equivalent denodeifier) is used
-   * then seriallyExecute() is just an admittedly long
+   * then seriallyExecute() is just an -- admittedly long --
    * one-liner. Promises!
    */
   context('When there is a list of nodeback async tasks to perform sequentially', function(){
     var whatWereTheResults = null;
 
     before(function(){ 
-      /* One of the goals of this exploratory experiment is to come up
+      /*
+       * One of the goals of this exploratory experiment is to come up
        * with a generic seriallyExecute(). Generic in that it only
        * knows it has tasks (read: zero arity functions) to run, but
        * it doesn't know about parameters to pass into the tasks. The
-       * following bind() accomplishes that yet seriallyExecute()
+       * following bind() accomplishes that, yet seriallyExecute()
        * still accumulates the results... That _is_ a reduce() things
-       * so maybe that's good enough.
-       *
-       * I still feel there's a higher level abstraction/construct
-       * that I'm missing -- something that knows how to set the
-       * accumulator object; as is the accumulator is hardwired to []. 
-       * But for now, as is, I have a Promises based async task
-       * executor: in goes an Array of tasks and out comes an Array
-       * of values, kinda a seriallyMap() or mapSequentiallyAsync().
-       *
-       * I would not be surprised it there is not already a standarly
-       * named object that does this that I'm just not aware
-       * of. ToDoList()? TaskQueue()?
+       * so maybe that's good enough. Doesn't feel right, though.
        */
       var somePromisifiedNodebackers = [1, 2, 3, 4].map(function(i){
         return aPromisifiedSquaringNodebacker.bind(null, i);
@@ -227,8 +207,8 @@ describe('compositions.js:', function(){
       return whatWereTheResults;
       });
 
+    // By the time it() is called, the Promise returned by before() has resolves
     it('must execute them one at a time', function(){
-      // By the time it() is called, the Promise returned by before() has resolves
       whatWereTheResults.then(function(theResults){
         must(theResults).eql([1, 4, 9, 16]);
         });
@@ -239,13 +219,14 @@ describe('compositions.js:', function(){
   /* This is the same task serializer machinery as in the previous two
    * contexts, but this time each individual (composite Promise.all() based)
    * task will self-rate limit. The effect will be that for a given
-   * set of tasks the tasks will be performed one at a time and if any
-   * task completes within a specified rate-limit window of time, the
-   * task will wait for a time-out before declaring that it has
-   * completed (read: resolve its Promise as fulfilled).
+   * set of tasks, the tasks will be performed one at a time and if any
+   * task completes within a specified rate-limit window of time, it
+   * will wait for a time-out before declaring that it has completed 
+   * (read: settle the Promise as fulfilled).
    *
-   * This exercise was worked out because OSM's Nominatim geocoder requires that only one
-   * lookup be performed at a time and the no more than one request happen per second.
+   * This exercise was worked out because OSM's Nominatim geocoder requires 
+   * that only one lookup be performed at a time and the no more than one 
+   * request happen per second.
    */
   context('when required to rate limit a sequence of tasks', function(){
     var startTime = null;
@@ -254,14 +235,14 @@ describe('compositions.js:', function(){
     var somePromisifiedAndSelfRateLimitingNodebackers = null;
     var whatWereTheResults = null;
 
-    // Simply set this to any numbers to run a different test:
+    // Simply set this to any quatity of numbers to run a different test:
     var someNumbersToBeSquaredAsync = [1, 2, 3, 4, 5];
 
     this.timeout((someNumbersToBeSquaredAsync.length + 1) * 1000);
 
     /* Each asynchronously-square-this-number task has 2 sub-Promises: 
-     * 1. the dummy async worker, which in a real context would 
-     *    probably hit the net or storage for some request-response cycle.
+     * 1. the dummy async worker (the squarer), which in a real context would 
+     *    probably, say,  hit the net or storage for some request-response cycle.
      * 2. the rate limiter timout, which is just a setTimeout used
      *    to make sure the tasks are minimally spread out through
      *    time in order to, say, not annoy a rate limiting service.
@@ -294,14 +275,16 @@ describe('compositions.js:', function(){
       return whatWereTheResults;
       });
 
+    // Mocha will wait until the Promise returned by before() settles before calling it()
     it('must not excute the tasks in less time than the total of the minimal specified thresholds', function(){
-      // Mocha will wait until the Promise returned by before() settles before calling it()
       endTime = process.hrtime(startTime);
 
       whatWereTheResults.then(function(theResults){
+        // Check that the workers did what was expected: asynchronously square some numbers
         must(theResults).eql(someNumbersToBeSquaredAsync.map(function(i){return i*i;}));
         });
 
+      // Confirm that the list of things to do did not happen too fast
       var millisElapsed = endTime[0]*1000 + Math.floor(endTime[1]/1000000);
       var minimumExpectedMillis = rateLimitMinMillisPerTask * somePromisifiedAndSelfRateLimitingNodebackers.length;
       must(millisElapsed).above(minimumExpectedMillis);
