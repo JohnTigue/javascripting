@@ -15,6 +15,42 @@ describe('function-objects.js', function(){
   var logger = require('utilios/logger')('funcyObjs');
   logger.level('debug');
 
+
+  /* This context explores extremely basic stuff down in the roots of
+   * JavaScript's type system. 
+   */
+  context('when metaprogramatically reflecting', function(){
+    // curious, no name conflict. I guess foo defined on the RHS, and then redefined on the left?
+    var foo = function foo(){
+      throw new Error("look, don't touch");
+      }
+
+    /* Initially it seemed there might be an issue here:
+     * http://stackoverflow.com/questions/5999998/how-can-i-check-if-a-javascript-variable-is-function-type
+     * That's worth reading just to wrap one's head around some possibly non-intuitive details.
+     *
+     * Nonetheless, seems this really isn't an complex issue. There is
+     * a simple and performant solution. Just use typeof:
+     * http://jsperf.com/alternative-isfunction-implementations/4
+     */
+    it('must be able to determine if an object is a Function', function(){
+        // As per the above jsperf link, both of the following are
+        // pretty close in performance, so whichever or whatever makes
+        // the linter happy.
+	must(typeof foo == 'function').true();
+	must(typeof foo === 'function').true();
+      });
+
+    it.skip('should mess around with Object instanceof Function and Function instanceof Object', function(){
+      //JFT-TODO: might as well
+      //http://stackoverflow.com/questions/23622695/why-in-javascript-both-object-instanceof-function-and-function-instanceof-obj
+      });
+
+    //JFT-TODO: more tomfoolery:
+    //http://stackoverflow.com/questions/1249531/how-to-get-a-javascript-objects-class
+    });
+
+
   // http://addyosmani.com/resources/essentialjsdesignpatterns/book/#modulepatternjavascript
   context('when using the module design pattern', function(){
 
