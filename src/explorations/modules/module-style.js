@@ -1,3 +1,5 @@
+/* global console, require, describe, context, before, beforeEach, after, afterEach, it */
+
 /* This exploration is for working out a style of JavaScript 
  * module "design patterns."
  *
@@ -162,3 +164,41 @@ Notice also that Osmani is making a distinction between returning an Object (via
 http://24ways.org/2014/javascript-modules-the-es6-way/
 
 */
+
+
+describe('module-style.js', function(){  
+  'use strict'; 
+
+  var must   = require('must');
+  var logger = require('utilios/logger')('funcyObjs');
+  logger.level('debug');
+
+
+  /* Simply to ensure that the module system, (reified as require() and module.exports,
+   * is actually being fully tested, a trivial module is imported. This is an unusual
+   * test in that what is actually under test is the module interface style, rather
+   * than some specific functionality. So, some dummy Math-y functions will be used to
+   * simply to have something done, including maintaining state.
+   */
+  var dummyFuncyObject = require('./dummy-module.js');
+
+  context('when using the funcyObject module design pattern', function(){
+    it('must be able to metaprogramatically reflect to determine if a funcyObject module instance is a Function', function(){
+	must(typeof dummyFuncyObject === 'function').true();
+      });
+
+    it('a funcy object should 1. be invokable', function(){
+      must(dummyFuncyObject()).equal(40);
+      });  
+
+    it('a funcy object should 2. able to maintain stated', function(){
+      must(dummyFuncyObject.stateModder()).equal(40);
+      must(dummyFuncyObject.stateModder()).equal(41);
+      must(dummyFuncyObject.stateModder()).equal(42);
+    });  
+
+    it('a funcy object should 3. have properties', function(){
+      must(dummyFuncyObject.someProp).equal('blueSky');
+      });  
+    });
+  });
