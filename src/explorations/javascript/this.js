@@ -87,3 +87,33 @@ a.b=f;
 a.b();
  */
 
+/*
+//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/slice
+var unboundSlice = Array.prototype.slice;
+
+// i.e. bind `this` to be unboundSlice, which simple means later
+// blathery of slice.call() can be shortened a nice clean slice()
+var slice = Function.prototype.call.bind(unboundSlice);
+
+function list() {
+  return slice(arguments, 0);
+}
+
+var list1 = list(1, 2, 3); 
+console.log(list1); // [1, 2, 3]
+*/
+
+/*
+'use strict';
+var myObj = {
+  foo: "bar",
+  moreStuff: function(cb){
+    cb();
+    },
+  doStuff: function(){
+    console.log('in doStuff: this.foo='+this.foo); // in doStuff: this=undefined OR 'use strict' will cause: TypeError: Cannot read property 'foo' of undefined
+    }
+  };
+  
+myObj.moreStuff(myObj.doStuff);
+ */
