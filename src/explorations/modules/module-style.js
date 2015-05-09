@@ -1,9 +1,10 @@
 /* global console, require, describe, context, before, beforeEach, after, afterEach, it */
 
-/* This exploration is for working out a style of JavaScript 
- * module "design patterns."
- *
- * Goals
+/* This exploration is for working out a idiomatically JavaScript
+ * style of module "design pattern."
+ */
+
+/* Goals
  * - Elegant in ES6 module syntax
  * - Elegant in ES5 modules
  * - Enable 'use strict' in the "function form" to keep
@@ -21,19 +22,19 @@
  * idiomatic modular JavaScript.
  */
 
-
 /* Writing in mid-2015, ES5 and ES6 should both be taken into
  * consideration. So, this is how to write modules in a style
  * that is explicitly ES5, but which migrates trivially to ES6.
  *
  * I definitely like the idea of export a single thing, which in
  * JavaScript means an Object. Further, if the exported Object is a
- * Function, a [[FunctionObject]], then it can be invoked but also can have properties that
- * can be externally get/set. Note: the Function returned is not intended
- * to be used as a constructor. For that-which-is-to-be-eported, all that
- * seems like a natural, native, maximally JS choice (especially if the
- * Function exported is the product of an IIFE, meaning that the invoked FE's
- * closure can hang around to keep internal state). 
+ * Function, a [[FunctionObject]], then it can be invoked but also can
+ * have properties that can be externally get/set. Note: the Function
+ * returned is not intended to be used as a constructor. For
+ * that-which-is-to-be-eported, all that seems like a natural, native,
+ * maximally JS choice (especially if the Function exported is the
+ * product of an IIFE, meaning that the invoked FE's closure can hang
+ * around to keep internal state).
  *
  * This is encouraged by node:
  * https://nodejs.org/docs/latest/api/all.html#all_module_exports
@@ -41,6 +42,10 @@
  *   many want their module to be an instance of some class. To do this, assign the desired export object to module.exports. 
  *
  * As an example, require() itself seems to have properies.
+ *
+ * Anohter example, Express apps start as follows:
+ *   var express = require('express');
+ *   var app = express();
  *
  * OK, so this is what? Some mutant FP style JS module?
  *
@@ -174,31 +179,38 @@ describe('module-style.js', function(){
   logger.level('debug');
 
 
-  /* Simply to ensure that the module system, (reified as require() and module.exports,
-   * is actually being fully tested, a trivial module is imported. This is an unusual
-   * test in that what is actually under test is the module interface style, rather
-   * than some specific functionality. So, some dummy Math-y functions will be used to
+  /* Simply to ensure that the module system, (reified as require()
+   * and module.exports, is actually being fully tested, a trivial
+   * module is imported. 
+   *
+   * This is an unusual test in that what is actually under test is
+   * the module interface style, rather than some specific
+   * functionality. So, some dummy Math-y functions will be used to
    * simply to have something done, including maintaining state.
    */
   var dummyFuncyObject = require('./dummy-module.js');
 
   context('when using the funcyObject module design pattern', function(){
-    it('must be able to metaprogramatically reflect to determine if a funcyObject module instance is a Function', function(){
+    it('must metaprogramatically be able to reflect that a funcyObject module instance is a Function', function(){
 	must(typeof dummyFuncyObject === 'function').true();
       });
 
-    it('a funcy object should 1. be invokable', function(){
+    it('a funcy object should 1. Be invokable', function(){
       must(dummyFuncyObject()).equal(40);
       });  
 
-    it('a funcy object should 2. able to maintain stated', function(){
+    it('a funcy object should 2. Be able to maintain stated', function(){
       must(dummyFuncyObject.stateModder()).equal(40);
       must(dummyFuncyObject.stateModder()).equal(41);
       must(dummyFuncyObject.stateModder()).equal(42);
-    });  
+      });  
 
-    it('a funcy object should 3. have properties', function(){
+    it('a funcy object should 3. Have properties', function(){
       must(dummyFuncyObject.someProp).equal('blueSky');
+      });
+
+    it('must be able to internally access those properties', function(){
+      must(dummyFuncyObject.isTheSkyBlue()).equal(true);
       });  
     });
   });

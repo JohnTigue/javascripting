@@ -14,6 +14,12 @@ module.exports = (function(){
 
   underConstruction.self = underConstruction;
   underConstruction.someProp = "blueSky";
+
+
+  underConstruction.isTheSkyBlue = function(){
+    return this.someProp == "blueSky";
+    }
+
   return underConstruction;
   })();
 
