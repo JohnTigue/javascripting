@@ -206,11 +206,11 @@ describe('module-style.js', function(){
       });  
 
     it('a funcy object should 3. Have properties', function(){
-      must(dummyFuncyObject.someProp).equal('blueSky');
+      must(dummyFuncyObject.drummer).equal('Clyde Stubblefield');
       });
 
     it('must be able to internally access those properties', function(){
-      must(dummyFuncyObject.isTheSkyBlue()).equal(true);
+      must(dummyFuncyObject.isDrummerFunky()).equal(true);
       });  
     });
   });
