@@ -3,11 +3,14 @@
  * a whole bunch o' commentary on what, why, and how.
  */
 module.exports = (function(){
+  // since the whole module is an IIFE, inside this function we can be strict
+  'use strict'; 
+
   var someClosuredState = 40;
 
   var aFuncyObject = function(){
     // JFT-TODO: what really should the funcyObject module itself return when called?
-    // Is it a factory?
+    // Is it a factory? Not yet. And not clear that it should be.
     return someClosuredState;
     };
 
@@ -27,6 +30,9 @@ module.exports = (function(){
     }
 
   return aFuncyObject;
-  })();
+  }()); // if this line were })() that would be what Crockford refers to as "dog balls". See:
+        // http://www.adequatelygood.com/JavaScript-Module-Pattern-In-Depth.html#comment-1844066085
 
-
+  // Note: although not done here, passing params into the IIFE can be done to help avoid use of globals. See: 
+  // http://www.adequatelygood.com/JavaScript-Module-Pattern-In-Depth.html
+  // Moving forward into ES6 (or just have a module system via require()) means the value of doing so in greatly reduced.

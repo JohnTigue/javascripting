@@ -170,7 +170,10 @@ http://24ways.org/2014/javascript-modules-the-es6-way/
 
 */
 
-
+/* Bibliography:
+ * http://www.adequatelygood.com/JavaScript-Module-Pattern-In-Depth.html
+ * http://benalman.com/news/2010/11/immediately-invoked-function-expression/
+ */
 describe('module-style.js', function(){  
   'use strict'; 
 
@@ -187,30 +190,34 @@ describe('module-style.js', function(){
    * the module interface style, rather than some specific
    * functionality. So, some dummy Math-y functions will be used to
    * simply to have something done, including maintaining state.
+   *
+   * I would not expect that normally names would include "FuncyObject" 
+   * because it is simply a module interface design style name, rather
+   * than indicative of what the thing being imported is/does.
    */
-  var dummyFuncyObject = require('./dummy-module.js');
+  var exampleFuncyObject = require('./example-funcy-object-module.js');
 
   context('when using the funcyObject module design pattern', function(){
     it('must metaprogramatically be able to reflect that a funcyObject module instance is a Function', function(){
-	must(typeof dummyFuncyObject === 'function').true();
+	must(typeof exampleFuncyObject === 'function').true();
       });
 
     it('a funcy object should 1. Be invokable', function(){
-      must(dummyFuncyObject()).equal(40);
+      must(exampleFuncyObject()).equal(40);
       });  
 
     it('a funcy object should 2. Be able to maintain stated', function(){
-      must(dummyFuncyObject.stateModder()).equal(40);
-      must(dummyFuncyObject.stateModder()).equal(41);
-      must(dummyFuncyObject.stateModder()).equal(42);
+      must(exampleFuncyObject.stateModder()).equal(40);
+      must(exampleFuncyObject.stateModder()).equal(41);
+      must(exampleFuncyObject.stateModder()).equal(42);
       });  
 
     it('a funcy object should 3. Have properties', function(){
-      must(dummyFuncyObject.drummer).equal('Clyde Stubblefield');
+      must(exampleFuncyObject.drummer).equal('Clyde Stubblefield');
       });
 
     it('must be able to internally access those properties', function(){
-      must(dummyFuncyObject.isDrummerFunky()).equal(true);
+      must(exampleFuncyObject.isDrummerFunky()).equal(true);
       });  
     });
   });
