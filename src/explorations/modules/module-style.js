@@ -173,6 +173,8 @@ http://24ways.org/2014/javascript-modules-the-es6-way/
 /* Bibliography:
  * http://www.adequatelygood.com/JavaScript-Module-Pattern-In-Depth.html
  * http://benalman.com/news/2010/11/immediately-invoked-function-expression/
+ *   This may well be where IIFE was defined in 2010, although the same thing moved under a different name earlier
+ * http://toddmotto.com/mastering-the-module-pattern/
  */
 describe('module-style.js', function(){  
   'use strict'; 

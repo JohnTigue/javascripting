@@ -32,6 +32,12 @@ module.exports = (function(){
   return aFuncyObject;
   }()); // if this line were })() that would be what Crockford refers to as "dog balls". See:
         // http://www.adequatelygood.com/JavaScript-Module-Pattern-In-Depth.html#comment-1844066085
+        // Personally, if the name "IIFE" is the issue then ()() seems
+        // more appropriate than (()) as () is the FE and ()() is that FE
+        // II'd. In both cases the first ( is just about tricking the
+        // lexer to stay out of function declaration mode; the latter could
+        // be argued to be cleaner. But hey, there seems to be no real 
+        // difference, so do whatcha wanna.
 
   // Note: although not done here, passing params into the IIFE can be done to help avoid use of globals. See: 
   // http://www.adequatelygood.com/JavaScript-Module-Pattern-In-Depth.html
