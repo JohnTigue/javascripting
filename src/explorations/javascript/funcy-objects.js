@@ -7,6 +7,9 @@
   * Some of it is about the foundations for a potentially interesting
   * module design pattern. More on that in:
   * ../modules/module-style.js
+  *
+  * TODO: This file needs to be renamed. As is it causes confusion
+  * with the funcyObject module interface design pattern.
   */
 describe('function-objects.js', function(){  
   'use strict'; 
@@ -102,4 +105,25 @@ describe('function-objects.js', function(){
     });
 
 
+  context('when confirming fundamentals', function(){
+    var foo = (function(){
+      var bar = 'baz';
+      return function(){
+        return bar;
+        };
+      })();
+
+    before(function(){
+      // this actually defines a new property (called bar) of the
+      // object which happens to be the function foo; it does not
+      // affect the bar in the closure around foo. 
+      // Yeah, this just makes sense once you think about it; simply
+      // working it out explicitly.
+      foo.bar = 'qux';
+      });
+
+    it('must not be that identically named internal vars and external properties can be confused for each other', function(){
+      must(foo.bar).not.equal(foo()); // i.e. 'qux' != 'baz'
+      });
+    }); 
   });
