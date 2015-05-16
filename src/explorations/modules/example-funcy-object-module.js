@@ -9,8 +9,14 @@ module.exports = (function(){
   var someClosuredState = 40;
 
   var aFuncyObject = function(){
-    // JFT-TODO: what really should the funcyObject module itself return when called?
-    // Is it a factory? Not yet. And not clear that it should be.
+    // JFT-TODO: what really should the funcyObject module itself
+    // return when called?  Is it a factory? Not yet. And not clear
+    // that it should be.  
+    //
+    // But if it becomes a factory, no need for a new operator b/c the
+    // invocation of this function creates a closure which can
+    // maintain state, if this function returns a function, rather than
+    // simply a primative, like it does now.
     return someClosuredState;
     };
 

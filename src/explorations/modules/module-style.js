@@ -51,12 +51,33 @@
  *
  * Note also that in ES6 default exports, that-which-is-exported is anonymous:
  *     export default function (...) { ... };
- * So, this is close to a IIFE returning an anonymous function.
+
+ * So, that ES6 default has the same interface as in the earlier JS module pattern wherein
+ * a IIFE returns an anonymous function, so that is an nice style similarity
+ * upon which to design now.
+ *
+ * Of course, the ES6 default just a function
+ * being returned, without a closure to maintain state across
+ * invocations. The similarity here is simply that the interface is
+ * similar in that what is returned is a function, but note the
+ * separate issue of the IIFE of the module pattern is intended to set
+ * up a state preservation mechanism via a closure, which is why a function
+ * is returned, a an Object would also suffice to cause the "parent"
+ * closure to hang around on the heap after teh associated function invokation
+ * completes. It's lexical scoping that cuases the hang-around, not necessarily
+ * first class functions. Right? But wikipedia says:
+ * (http://en.wikipedia.org/wiki/Closure_%28computer_programming%29)
+ *
+ *   "closures (also lexical closures or function closures) are a
+ *   technique for implementing lexically scoped name binding in
+ *   languages with first-class functions."
  * 
  * If just an Object is exported then it cannot be invokes as a
  * Function. (How this works according to strict CommonJS is not clear
  * to me... i.e.  exports expects to have properties assigned on it,
- * not to be redefined via: exports = randomFunction().
+ * not to be redefined via: exports = randomFunction(). But node just blows 
+ * that restriction off by also passing in module.exports not just
+ * CommonJS's exports. Right?
  * 
  * More importantly, for reasons I have not dug into, it seems the TC39
  * folks feel the same:
