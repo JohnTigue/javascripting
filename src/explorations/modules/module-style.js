@@ -95,6 +95,7 @@
  * Search that doc for "single/default"
  * I only got a quarter the way through the doc.
  *     
+ *
  * Babel is one of the two best ES6 to ES5 transpilers:
  * https://babeljs.io/
  * 
@@ -139,7 +140,7 @@ for what benefit? Would it not be wiser to just:
  * exports = fooer = function foo_module(cfg) {...}
 except of course that will fail in node b/c module is what matters,
   specifically module.exports, while on the other hand exports is just an unbound variable that starts out referencing module.exports 
-  so the above will just reassign exports and the exporation process will leave module.exports == null (or undefined)
+  so the above will just reassign exports and the exporation process will leave module.exports == null (or undefined, or maybe it's {})
   I wonder why the CommonJS folks didn't, similar to AMD, have the concept of a define function call with, say, a return value which becomes the module's export
     have a free variable for the interface point seems crude. Sure ADMs define is ugly but was there not some middle ground?
   [ ] what actually goes on under the hood? is the require() file's contents "included" inside a IIFE or such? and if so what precisely does "included" mean?
@@ -150,10 +151,12 @@ Here's what node has to say about it:
 https://nodejs.org/api/modules.html#modules_module_exports
 https://nodejs.org/api/modules.html#modules_exports_alias
 
-I guess node had "Module system" going and then in CommonJS standardization
+Maybe node already had a "Module system" going and then in harmonizing to CommonJS standardization
 they added exports as a ref to module.exports just to satisfy the standard,
 and the "coincidence" of exports and module.exports have the same name
 has caused confusion ever since.
+
+
 
 [ ] Wait, does CommonJS prevent returning just a single function? B/c cannot:
     exports = function(){}
@@ -162,6 +165,7 @@ No one yelled at this guy:
     but both folks in the chat are actually assigning to module.exports which isn't a CommonJS thing
     And what the one answer IDs as "revealing module pattern, isn't if using Osmani's books def
     Responder does provide some nice links
+
 
 Then there is the "revealing module pattern":
   http://addyosmani.com/resources/essentialjsdesignpatterns/book/#revealingmodulepatternjavascript
@@ -178,24 +182,23 @@ Notice also that Osmani is making a distinction between returning an Object (via
 
 
 /* Enabling JSDoc to do its job: 
- * 
-     - JSDoc: documentation for CommonJS (ergo node) modules. And I have to assume ES6
-       - http://usejsdoc.org/howto-commonjs-modules.html
-     - http://dailyjs.com/2012/01/26/effective-node-modules/
-       - just some intermediate style tips
-     - returning a Function (rather than simply an Object literal), 3 styles of module.export =  
-       - also: the "double constructor" idiom. 
-       - http://stackoverflow.com/questions/18503349/differences-between-three-different-ways-using-module-exports
-
-http://24ways.org/2014/javascript-modules-the-es6-way/
-
-*/
+ 
+ /
 
 /* Bibliography:
  * http://www.adequatelygood.com/JavaScript-Module-Pattern-In-Depth.html
  * http://benalman.com/news/2010/11/immediately-invoked-function-expression/
  *   This may well be where IIFE was defined in 2010, although the same thing moved under a different name earlier
  * http://toddmotto.com/mastering-the-module-pattern/
+ * http://24ways.org/2014/javascript-modules-the-es6-way/
+ * https://esdiscuss.org/topic/moduleimport#content-0
+ * JSDoc: documentation for CommonJS (ergo node) modules. And I have to assume ES6
+ *   http://usejsdoc.org/howto-commonjs-modules.html
+ * http://dailyjs.com/2012/01/26/effective-node-modules/
+ * - just some intermediate style tips
+ * returning a Function (rather than simply an Object literal), 3 styles of module.export =  
+ * - also: the "double constructor" idiom. 
+ * - http://stackoverflow.com/questions/18503349/differences-between-three-different-ways-using-module-exports
  */
 describe('module-style.js', function(){  
   'use strict'; 
@@ -220,22 +223,22 @@ describe('module-style.js', function(){
    */
   var exampleFuncyObject = require('./example-funcy-object-module.js');
 
-  context('when using the funcyObject module design pattern', function(){
+  context('when using the FuncyObject module design pattern', function(){
     it('must metaprogramatically be able to reflect that a funcyObject module instance is a Function', function(){
 	must(typeof exampleFuncyObject === 'function').true();
       });
 
-    it('a funcy object should 1. Be invokable', function(){
+    it('a FuncyObject should 1. Be invokable', function(){
       must(exampleFuncyObject()).equal(40);
       });  
 
-    it('a funcy object should 2. Be able to maintain stated', function(){
+    it('a FuncyObject should 2. Be able to maintain stated', function(){
       must(exampleFuncyObject.stateModder()).equal(40);
       must(exampleFuncyObject.stateModder()).equal(41);
       must(exampleFuncyObject.stateModder()).equal(42);
       });  
 
-    it('a funcy object should 3. Have properties', function(){
+    it('a FuncyObject should 3. Have properties', function(){
       must(exampleFuncyObject.drummer).equal('Clyde Stubblefield');
       });
 
