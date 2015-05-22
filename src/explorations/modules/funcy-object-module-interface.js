@@ -187,7 +187,11 @@ Notice also that Osmani is making a distinction between returning an Object (via
 
 /* Bibliography:
  * http://eloquentjavascript.net/10_modules.html
- *   very well written book chapter on how module systems work in the nitty-gritty, without bogging down in details of any particular module system
+ *   Author of Elegant JavaScript, a good and free book
+ *   A very well written book chapter on how module systems work in the nitty-gritty, without bogging down in details of any particular module system
+ * https://javascriptweblog.wordpress.com/2010/04/22/the-module-pattern-in-a-nutshell/
+ *   Autor of If Hemmingway Wrote JavaScript
+ *   A decent "couter-argument" regarding modules. Basically, saying nice but meh, don't need them that much.
  * http://www.adequatelygood.com/JavaScript-Module-Pattern-In-Depth.html
  * http://benalman.com/news/2010/11/immediately-invoked-function-expression/
  *   This may well be where IIFE was defined in 2010, although the same thing moved under a different name earlier
