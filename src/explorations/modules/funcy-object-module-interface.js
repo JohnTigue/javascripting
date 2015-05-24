@@ -1,10 +1,10 @@
 /* global console, require, describe, context, before, beforeEach, after, afterEach, it */
 
-/* This exploration is for working out a idiomatically JavaScript
- * style of module "design pattern."
+/* This exploration was for working out an idiomatically JavaScript
+ * style of module "design pattern" or interface.
  */
 
-/* Goals
+/* Goals:
  * - Elegant in ES6 module syntax
  * - Elegant in ES5 modules
  * - Enable 'use strict' in the "function form" to keep
@@ -14,18 +14,28 @@
  * - Provide as much info as possible for debugging
  */
 
-/* See ../javascript/funcy-objects.js for the basic language
+/* OK, so this is what? Some mutant FP style JS module?
+ * Well, a Function is returned... is that really enough
+ * to say FP. Or, yeah, FP in JS...
+ */
+
+/* Basics:
+ * See ../javascript/funcy-objects.js for the basic language
  * syntax and capabilities that are leveraged in this
  * design. This work is probably not original; someone
  * must have trodden very similar territory before me
  * but it's fun and educational as to what might be maximially
- * idiomatic modular JavaScript.
+ * idiomatic modular JavaScript. And I cannot find any articles
+ * expressing similar ideas.
  */
 
-/* Writing in mid-2015, ES5 and ES6 should both be taken into
+/* ES5 and ES6:
+ * Writing in mid-2015, ES5 and ES6 should both be taken into
  * consideration. So, this is how to write modules in a style
  * that is explicitly ES5, but which migrates trivially to ES6.
- *
+ */
+
+/* Exporting a single object:
  * I definitely like the idea of export a single thing, which in
  * JavaScript means an Object. Further, if the exported Object is a
  * Function, a [[FunctionObject]], then it can be invoked but also can
@@ -35,23 +45,8 @@
  * maximally JS choice (especially if the Function exported is the
  * product of an IIFE, meaning that the invoked FE's closure can hang
  * around to keep internal state).
- *
- * This is encouraged by node:
- * https://nodejs.org/docs/latest/api/all.html#all_module_exports
- *   The module.exports object is created by the Module system. Sometimes this is not acceptable; 
- *   many want their module to be an instance of some class. To do this, assign the desired export object to module.exports. 
- *
- * As an example, require() itself seems to have properies.
- *
- * Anohter example, Express apps start as follows:
- *   var express = require('express');
- *   var app = express();
- *
- * OK, so this is what? Some mutant FP style JS module?
- *
  * Note also that in ES6 default exports, that-which-is-exported is anonymous:
  *     export default function (...) { ... };
-
  * So, that ES6 default has the same interface as in the earlier JS module pattern wherein
  * a IIFE returns an anonymous function, so that is an nice style similarity
  * upon which to design now.
@@ -94,8 +89,25 @@
  *     "ES6 favors the single/default export style"
  * Search that doc for "single/default"
  * I only got a quarter the way through the doc.
- *     
+ */
+
+/* Prior art:
+ * This is encouraged by node:
+ * https://nodejs.org/docs/latest/api/all.html#all_module_exports
+ *   The module.exports object is created by the Module system. Sometimes this is not acceptable; 
+ *   many want their module to be an instance of some class. To do this, assign the desired export object to module.exports. 
  *
+ * As an example, require() itself seems to have properies.
+ *
+ * Anohter example, Express apps start as follows:
+ *   var express = require('express');
+ *   var app = express();
+ */
+
+
+
+
+/*
  * Babel is one of the two best ES6 to ES5 transpilers:
  * https://babeljs.io/
  * 
@@ -206,11 +218,12 @@ Notice also that Osmani is making a distinction between returning an Object (via
  * - also: the "double constructor" idiom. 
  * - http://stackoverflow.com/questions/18503349/differences-between-three-different-ways-using-module-exports
  */
-describe('module-style.js', function(){  
+
+describe('funcy-object-module-interface.js', function(){  
   'use strict'; 
 
   var must   = require('must');
-  var logger = require('utilios/logger')('funcyObjs');
+  var logger = require('utilios/logger')('funcy');
   logger.level('debug');
 
 
