@@ -1,7 +1,10 @@
 /* global console, require, describe, context, before, beforeEach, after, afterEach, it */
 
 /* This exploration was for working out an idiomatically JavaScript
- * style of module "design pattern" or interface.
+ * style of module "design pattern" or interface. An interface of one
+ * object, which happens to be a Function. Something that has
+ * config'able properties but which is also conveniently invokable. A
+ * funcy object.
  */
 
 /* Goals:
