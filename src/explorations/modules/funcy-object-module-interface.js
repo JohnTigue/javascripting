@@ -7,6 +7,8 @@
  * funcy object.
  */
 
+/* JFT-TODO: add in fluent syntax as a feature, which is JS-y and funcy */
+
 /* Goals:
  * - Elegant in ES6 module syntax
  * - Elegant in ES5 modules
