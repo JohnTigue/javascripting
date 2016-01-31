@@ -245,29 +245,29 @@ describe('funcy-object-module-interface.js', function(){
    * because it is simply a module interface design style name, rather
    * than indicative of what the thing being imported is/does.
    */
-  var exampleFuncyObject = require('./example-funcy-object-module.js');
+  var exampleFuncyModule = require('./funcy-module-example.js');
 
   context('when using the FuncyObject module design pattern', function(){
     it('must metaprogramatically be able to reflect that a funcyObject module instance is a Function', function(){
-	must(typeof exampleFuncyObject === 'function').true();
+	must(typeof exampleFuncyModule === 'function').true();
       });
 
-    it('a FuncyObject should 1. Be invokable', function(){
-      must(exampleFuncyObject()).equal(40);
+    it('a Funcy Module must: 1. Be invokable', function(){
+      must(exampleFuncyModule()).equal(40);
       });  
 
-    it('a FuncyObject should 2. Be able to maintain stated', function(){
-      must(exampleFuncyObject.stateModder()).equal(40);
-      must(exampleFuncyObject.stateModder()).equal(41);
-      must(exampleFuncyObject.stateModder()).equal(42);
+    it('a Funcy Module must: 2. Be able to maintain stated', function(){
+      must(exampleFuncyModule.stateModder()).equal(40);
+      must(exampleFuncyModule.stateModder()).equal(41);
+      must(exampleFuncyModule.stateModder()).equal(42);
       });  
 
-    it('a FuncyObject should 3. Have properties', function(){
-      must(exampleFuncyObject.drummer).equal('Clyde Stubblefield');
+    it('a Funcy Module must: 3. Optionally have public properties', function(){
+      must(exampleFuncyModule.drummer).equal('Clyde Stubblefield');
       });
 
-    it('must be able to internally access those properties', function(){
-      must(exampleFuncyObject.isDrummerFunky()).equal(true);
+    it('a Funcy Module must: 4. Be able to internally access said public properties', function(){
+      must(exampleFuncyModule.isDrummerFunky()).equal(true);
       });  
     });
   });

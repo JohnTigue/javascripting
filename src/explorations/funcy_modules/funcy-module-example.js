@@ -46,5 +46,5 @@ module.exports = (function(){
         // difference, so do whatcha wanna.
 
   // Note: although not done here, passing params into the IIFE can be done to help avoid use of globals. See: 
-  // http://www.adequatelygood.com/JavaScript-Module-Pattern-In-Depth.html
-  // Moving forward into ES6 (or just have a module system via require()) means the value of doing so in greatly reduced.
+  //   http://www.adequatelygood.com/JavaScript-Module-Pattern-In-Depth.html
+  // In an ES6 context (or just having a module system via require()) the value of doing so in greatly reduced.
