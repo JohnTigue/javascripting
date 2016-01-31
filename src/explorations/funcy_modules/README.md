@@ -1,11 +1,9 @@
-## Funcy object module interfaces
+## Funcy module
 
-This is a JavaScript module interface "type" which leverages JavaScript's features maximally. It returns an Object which is a Function, with various properties as well.
+This is an interface style for modules which leverages JavaScript's features maximally. It returns an Object which is a Function, with various properties as well, a function-y (funcy) object is returned by the module upon require() or import.
 
 There are a few files in this directory.
 - `funcy-objects.js` simply explores the fundimentals of JavaScript on the topic of Functions versus Objects.
 - `funcy-object-module-interface.js` describes what the Funcy Object interface type's goals are. The file is actually a Mocha test script working through the features.
 - `example-funcy-object-module.js` is an example of the interface type. This is actually the module used during testing in `funcy-object-module-interface.js`
 
-### To do
-Maybe this should be called Funcy Module interface?
