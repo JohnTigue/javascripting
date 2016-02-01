@@ -2,21 +2,32 @@
 
 /* This exploration was for working out an idiomatically JavaScript
  * style of module "design pattern" or interface. An interface of one
- * object, which happens to be a Function. Something that has
+ * Object, which happens to be a Function. Something that has
  * config'able properties but which is also conveniently invokable. A
- * funcy object.
+ * funcy object? By the way, funky (RIP Buddy Bolden) is a good thing in my book.
+ * 
+ * Note: this work is not unique; it is simply me working through the details
+ * of how and why such things work on under the hood. For example, consider
+ * http://www.2ality.com/2014/09/es6-modules-final.html which says:
+ *   "The following pattern is surprisingly common in JavaScript: A library is a single 
+ *   function, but additional services are provided via properties of that 
+ *   function. Examples include jQuery and Underscore.js."
  */
 
 /* JFT-TODO: add in fluent syntax as a feature, which is JS-y and funcy */
 
-/* Goals:
- * - Elegant in ES6 module syntax
+/* 
+ * Goals:
+ * - Elegant in ES6 module syntax with a single: export default function(){}
  * - Elegant in ES5 modules
  * - Enable 'use strict' in the "function form" to keep
  *   JSHint happy and reap the benefits of the Use Strint Directive
  * - Enable documentation generation via JSDoc
  *   http://usejsdoc.org/howto-commonjs-modules.html
  * - Provide as much info as possible for debugging
+ *
+ * Non-goals:
+ * - Not interested in JavaScript's class machinery, for now. Maybe in ES7.
  */
 
 /* OK, so this is what? Some mutant FP style JS module?
@@ -206,9 +217,12 @@ Notice also that Osmani is making a distinction between returning an Object (via
  * http://eloquentjavascript.net/10_modules.html
  *   Author of Elegant JavaScript, a good and free book
  *   A very well written book chapter on how module systems work in the nitty-gritty, without bogging down in details of any particular module system
+ * http://www.2ality.com/2014/09/es6-modules-final.html
+ *   Rauschmayer is one of the best writers on the subject of JavaScript.g
  * https://javascriptweblog.wordpress.com/2010/04/22/the-module-pattern-in-a-nutshell/
  *   Autor of If Hemmingway Wrote JavaScript
- *   A decent "couter-argument" regarding modules. Basically, saying nice but meh, don't need them that much.
+ *   A decent "couter-argument" regarding modules. Basically, saying nice but meh, don't need them that much. 
+ *   In my opinion modules become more important as a codebase grows. I do not see any reason to not use modules.
  * http://www.adequatelygood.com/JavaScript-Module-Pattern-In-Depth.html
  * http://benalman.com/news/2010/11/immediately-invoked-function-expression/
  *   This may well be where IIFE was defined in 2010, although the same thing moved under a different name earlier
@@ -219,12 +233,14 @@ Notice also that Osmani is making a distinction between returning an Object (via
  *   http://usejsdoc.org/howto-commonjs-modules.html
  * http://dailyjs.com/2012/01/26/effective-node-modules/
  * - just some intermediate style tips
+ * http://bites.goodeggs.com/posts/export-this/
+ *   7 node.js module styles compared
  * returning a Function (rather than simply an Object literal), 3 styles of module.export =  
  * - also: the "double constructor" idiom. 
  * - http://stackoverflow.com/questions/18503349/differences-between-three-different-ways-using-module-exports
  */
 
-describe('funcy-object-module-interface.js', function(){  
+describe('funcy-modules.js', function(){  
   'use strict'; 
 
   var must   = require('must');

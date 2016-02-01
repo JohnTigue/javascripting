@@ -1,6 +1,12 @@
-/* The whole idea of the code in this directory is to come up with a module 
- * interface style that will be calledy FuncyObject. See module-style.js for
- * a whole bunch o' commentary on what, why, and how.
+/* 
+ * This is an example of the Funcy Module design pattern for JavaScript modules.
+ * See funcy-module-tester.js for much more detail on the what, why, and how.
+ */
+
+/*
+ * JFT-TODO:
+ * So how does this become a ES6 export default function () {}?
+ * Do I need to go to full-on ES6 and then babel out this ES5 code as a built file? Which I would then comment?
  */
 module.exports = (function(){
   // since the whole module is an IIFE, inside this function we can be strict
@@ -8,15 +14,20 @@ module.exports = (function(){
 
   var someClosuredState = 40;
 
-  var aFuncyObject = function(){
+  // Note: naming the function in the following expression is not required but it helps in stack traces
+  var aFuncyObject = function FuncyObject(){
     // JFT-TODO: what really should the funcyObject module itself
     // return when called?  Is it a factory? Not yet. And not clear
     // that it should be.  
     //
+    // Note that Express.js does this as well: export a single function which is a factory.
+    // See http://bites.goodeggs.com/posts/export-this/
+    //
     // But if it becomes a factory, no need for a new operator b/c the
     // invocation of this function creates a closure which can
     // maintain state, if this function returns a function, rather than
-    // simply a primative, like it does now.
+    // simply a primative, like it does now. Could also export a (higher order)
+    // function, which returns a function...
     return someClosuredState;
     };
 
